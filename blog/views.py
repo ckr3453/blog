@@ -23,15 +23,15 @@ def home(request):
     # request된 페이지를 얻어온뒤 return
     posts = paginator.get_page(page)
 
-    return render(request, 'home.html', {'blogs' : blogs, 'posts' : posts})
+    return render(request, 'home.html', {'blogs' : blogs, 'posts' : posts, 'weather': get_weather()})
 
 def detail(request, blog_id):
     blog_detail = get_object_or_404(Blog, pk = blog_id)
 
-    return render(request, 'detail.html', {'blog' : blog_detail})
+    return render(request, 'detail.html', {'blog' : blog_detail, 'weather': get_weather()})
 
 def new(request): #new.html을 띄워주는 함수
-    return render(request, 'new.html')
+    return render(request, 'new.html' ,{'weather': get_weather()})
 
 # render 함수와 redirect 함수의 차이점은?
 # 인자에 따라서, 어떤상황에 사용할지에 따라서 차이가있음.
@@ -60,9 +60,9 @@ def blogpost(request):
     # 2. 빈 페이지를 띄워주는 기능 -> GET 방식
     else:
         form = BlogPost()
-        return render(request, 'new.html', {'form' : form})
+        return render(request, 'new.html', {'form' : form , 'weather': get_weather()})
 
-def weather():
+def get_weather():
     owm = OWM(API_key='f74e57b358712ff9b0bae5f6d02ec271')
     obs = owm.weather_at_place('Seoul')
     obs = owm.weather_at_id(1835848)
@@ -71,4 +71,4 @@ def weather():
     w = obs.get_weather()
     wStatus = w.get_status()
     
-    return render(request, 'base.html', {'wStatus' : wStatus})
+    return wStatus
