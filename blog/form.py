@@ -1,7 +1,7 @@
 from django import forms
 from .models import Blog
 
-#models.py 에 있는 클래스를 기반으로 하기 때문에 ModelForm
+# models.py 에 있는 클래스를 기반으로 하기 때문에 ModelForm
 class BlogPost(forms.ModelForm):
     class Meta:
         model = Blog

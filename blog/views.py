@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.core.paginator import Paginator
 from .models import Blog
 from .form import BlogPost
+from pyowm import OWM
+
 # Create your views here.
 
 def home(request):
@@ -20,6 +22,7 @@ def home(request):
     
     # request된 페이지를 얻어온뒤 return
     posts = paginator.get_page(page)
+
     return render(request, 'home.html', {'blogs' : blogs, 'posts' : posts})
 
 def detail(request, blog_id):
@@ -58,3 +61,14 @@ def blogpost(request):
     else:
         form = BlogPost()
         return render(request, 'new.html', {'form' : form})
+
+def weather():
+    owm = OWM(API_key='f74e57b358712ff9b0bae5f6d02ec271')
+    obs = owm.weather_at_place('Seoul')
+    obs = owm.weather_at_id(1835848)
+    obs = owm.weather_at_coords(37.5667, 126.9783)
+    
+    w = obs.get_weather()
+    wStatus = w.get_status()
+    
+    return render(request, 'base.html', {'wStatus' : wStatus})
