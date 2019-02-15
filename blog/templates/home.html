@@ -18,20 +18,20 @@
         <br><br>
         {% endfor %}
         
-        {# First Previous #}
+        {# First, Previous #}
         {% if posts.has_previous %}
-        <a href="?page=1">First</a>
+        <a href="?page=1">First </a>
         <a href="?page={{posts.previous_page_number}}">Previous</a>
         {% endif %}
         
         {# page number of numbers #}
         <span>{{posts.number}}</span>
-        <span>of</span>
+        <span> of </span>
         <span>{{posts.paginator.num_pages}}</span>
         
         {# Next Last #}
         {% if posts.has_next %}
-        <a href="?page={{posts.next_page_number}}">Next</a>
+        <a href="?page={{posts.next_page_number}}">Next </a>
         <a href="?page={{posts.paginator.num_pages}}">Last</a>
         {% endif %}
     </div>

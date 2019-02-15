@@ -2,13 +2,14 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 from django.core.paginator import Paginator
 from .models import Blog
+from .form import BlogPost
 # Create your views here.
 
 def home(request):
     blogs = Blog.objects # 쿼리셋 # 메소드
 
-    # 블로그 모든 글들을 대상
-    blog_list = Blog.objects.all()
+    # 블로그 모든 글들을 대상 (내림차순으로 정렬하여 최신글이 앞으로)
+    blog_list = Blog.objects.all().order_by('-id')
 
     # 블로그 객체 세 개를 한 페이지로 자르기
     paginator = Paginator(blog_list, 3)
@@ -42,3 +43,18 @@ def create(request): # 입력받은 내용을 DB에 넣어주는 함수
     blog.save() # 지금까지 작성된 객체를 DB에 저장하라.
     return redirect('/blog/'+str(blog.id)) # 위에 과정을 처리하고 인자(url)로 넘기세요(이동하세요).
     # blog.id 는 정수형이기 때문에 url로 바꿔주기위해서는 str로 변환
+
+def blogpost(request):
+    # 1. 입력된 내용을 처리하는 기능 -> POST 방식
+    if request.method == 'POST':
+        form = BlogPost(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False) # db에 저장하지않고 모델객체를 가져옴.
+            post.pub_date = timezone.now()
+            post.save()
+            return redirect('home')
+
+    # 2. 빈 페이지를 띄워주는 기능 -> GET 방식
+    else:
+        form = BlogPost()
+        return render(request, 'new.html', {'form' : form})
